@@ -111,7 +111,7 @@ function __vgrnt_ssh()
 }
 
 
-function vgrnt() 
+function V() 
 {
 	if [ -z "${VGRNT_DIR}" ]
 	then
@@ -187,9 +187,9 @@ function vgrnt()
 		ls)
 			for v in ${VGRNT_DIR}/*/Vagrantfile
 			do
-				echo -en "$(sed -n 's/^.*config.vm.box = "\([^"]*\)".*$/\1/p' ${v})\t"
-				echo -en "$(sed -n 's/^.*config.vm.network :private_network, ip: "\([^"]*\)".*$/\1/p' ${v})\t"
-				echo -en "$(sed -n 's/^.*config.vm.box_url = "\([^"]*\)".*$/\1/p' ${v})\t"
+				echo -en "$(sed -n 's/^.*config.vm.box = "\([^"]*\)".*$/\1/p' ${v} 2>/dev/null)\t"
+				echo -en "$(sed -n 's/^.*config.vm.network :private_network, ip: "\([^"]*\)".*$/\1/p' ${v} 2>/dev/null)\t"
+				echo -en "$(sed -n 's/^.*config.vm.box_url = "\([^"]*\)".*$/\1/p' ${v} 2>/dev/null)\t"
 				echo 
 			done | column -c 3 -s '\t'
 			;;
@@ -207,7 +207,7 @@ function vgrnt()
 function __vgrnt_cmpl()
 {
 	local cur prev opts
-	local vs="$(vgrnt ls | cut -f1)"
+	local vs="$(V ls | cut -f1)"
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -221,4 +221,4 @@ function __vgrnt_cmpl()
 	esac
 }
 
-complete -F __vgrnt_cmpl vgrnt
+complete -F __vgrnt_cmpl V
