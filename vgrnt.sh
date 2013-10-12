@@ -210,6 +210,7 @@ function V()
 			echo "      [up <name>]"
 			echo "      [halt <name>]"
 			echo "      [ssh <name>]"
+			echo "      [status]"
 			echo "      [ls]"
 			;;
 	esac
