@@ -28,6 +28,7 @@ function __vgrnt_create()
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  config.vm.hostname = "${box}"
   config.vm.box = "${box}"
   config.vm.box_url = "${url}"
   config.vm.network :private_network, ip: "${ip}"
@@ -132,7 +133,7 @@ function V()
 	local command="${1}"
 	local name="${2}"
 
-	if [ ! "${command}" = "ls" ] 
+	if [ ! "${command}" = "ls" ] && [ ! "${command}" = "status" ]
 	then
 		if [ $# -ge 2 ] && [[ "${name}" =~ ^[a-zA-Z0-9._-]+$ ]]
 		then
@@ -192,6 +193,16 @@ function V()
 				echo -en "$(sed -n 's/^.*config.vm.box_url = "\([^"]*\)".*$/\1/p' ${v} 2>/dev/null)\t"
 				echo 
 			done | column -c 3 -s '\t'
+			;;
+		status)
+			local PREV="${PWD}"
+			for v in ${VGRNT_DIR}/*
+			do
+				echo -en "$(basename ${v})\t"
+				cd "${v}"
+				echo "$(vagrant status | head -n 3 | grep '^default' | cut -f2- -d' ')"
+			done | column -c 2 -s '\t'
+			cd "${PREV}"
 			;;
 		*)
 			echo "vgrnt [create <name> <url> <ip>]"
